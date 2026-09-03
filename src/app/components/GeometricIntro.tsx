@@ -43,45 +43,62 @@ export default function GeometricIntro({
       if (!line) return;
 
       const length = line.getTotalLength();
-      gsap.set(line, {
-        strokeDasharray: length,
-        strokeDashoffset: length,
-      });
-
       const { scale, y } = introSettle();
+      const mm = gsap.matchMedia();
 
-      const tl = gsap.timeline({
-        defaults: { ease: "power2.inOut" },
-        onComplete,
-      });
-
-      tl.to(line, {
-        strokeDashoffset: 0,
-        duration: 2.4,
-        ease: "power2.inOut",
-      });
-
-      tl.to(
-        ".geo-svg",
-        {
-          scale,
-          y,
-          duration: 1.2,
-          ease: "power3.inOut",
-        },
-        "+=0.3",
-      );
-
-      // Keep Illustrator stroke weight readable after CSS scale
-      tl.to(
-        line,
-        {
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(line, {
+          strokeDasharray: length,
+          strokeDashoffset: 0,
           attr: { "stroke-width": strokeForScale(scale) },
-          duration: 1.2,
-          ease: "power3.inOut",
-        },
-        "<",
-      );
+        });
+        gsap.set(".geo-svg", { scale, y });
+        onComplete();
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(line, {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+        });
+
+        const tl = gsap.timeline({
+          defaults: { ease: "power2.inOut" },
+          onComplete,
+        });
+
+        tl.to(line, {
+          strokeDashoffset: 0,
+          duration: 2.4,
+          ease: "power2.inOut",
+        });
+
+        tl.to(
+          ".geo-svg",
+          {
+            scale,
+            y,
+            duration: 1.2,
+            ease: "power3.inOut",
+          },
+          "+=0.3",
+        );
+
+        // Keep Illustrator stroke weight readable after CSS scale
+        tl.to(
+          line,
+          {
+            attr: { "stroke-width": strokeForScale(scale) },
+            duration: 1.2,
+            ease: "power3.inOut",
+          },
+          "<",
+        );
+      });
+
+      return () => {
+        mm.revert();
+      };
     },
     { scope: containerRef },
   );

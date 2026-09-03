@@ -47,6 +47,31 @@ function buildFloatingItems(): FloatingObraItem[] {
   return items;
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function handleMouseEnter(el: HTMLButtonElement) {
+  gsap.to(el, {
+    scale: 1.15,
+    opacity: 1,
+    filter: "brightness(1.1)",
+    duration: prefersReducedMotion() ? 0 : 0.4,
+    ease: "power2.out",
+    overwrite: "auto",
+  });
+}
+
+function handleMouseLeave(el: HTMLButtonElement, item: FloatingObraItem) {
+  gsap.to(el, {
+    scale: item.scale,
+    filter: "brightness(1)",
+    duration: prefersReducedMotion() ? 0 : 0.6,
+    ease: "power2.inOut",
+    overwrite: "auto",
+  });
+}
+
 interface Props {
   onSelect: (obra: Obra) => void;
 }
@@ -55,7 +80,6 @@ export default function FloatingObras({ onSelect }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<HTMLButtonElement[]>([]);
   const [floatingItems] = useState(buildFloatingItems);
-  const tweensRef = useRef<gsap.core.Tween[]>([]);
 
   const setItemRef = useCallback((el: HTMLButtonElement | null, i: number) => {
     if (el) itemsRef.current[i] = el;
@@ -65,74 +89,68 @@ export default function FloatingObras({ onSelect }: Props) {
     const els = itemsRef.current;
     if (!els.length) return;
 
-    const tweens: gsap.core.Tween[] = [];
+    const mm = gsap.matchMedia();
 
-    for (let i = 0; i < els.length; i++) {
-      const el = els[i];
-      const item = floatingItems[i];
-      if (!el) continue;
+    mm.add(
+      {
+        reduceMotion: "(prefers-reduced-motion: reduce)",
+        motionOk: "(prefers-reduced-motion: no-preference)",
+      },
+      (context) => {
+        const reduceMotion = Boolean(context.conditions?.reduceMotion);
+        const tweens: gsap.core.Tween[] = [];
 
-      gsap.set(el, {
-        xPercent: -50,
-        yPercent: -50,
-        left: `${item.x}%`,
-        top: `${item.y}%`,
-        rotation: item.rotation,
-        scale: item.scale,
-        opacity: 0,
-      });
+        for (let i = 0; i < els.length; i++) {
+          const el = els[i];
+          const item = floatingItems[i];
+          if (!el) continue;
 
-      gsap.to(el, {
-        opacity: 1,
-        duration: 1.5,
-        delay: i * 0.08,
-        ease: "power2.out",
-      });
+          gsap.set(el, {
+            xPercent: -50,
+            yPercent: -50,
+            left: `${item.x}%`,
+            top: `${item.y}%`,
+            rotation: item.rotation,
+            scale: item.scale,
+            opacity: 0,
+          });
 
-      const driftX = (40 + Math.random() * 60) * item.dirX;
-      const driftY = (30 + Math.random() * 50) * item.dirY;
-      const duration = 18 + Math.random() * 22;
+          gsap.to(el, {
+            opacity: 1,
+            duration: reduceMotion ? 0 : 1.5,
+            delay: reduceMotion ? 0 : i * 0.08,
+            ease: "power2.out",
+          });
 
-      const tween = gsap.to(el, {
-        x: `+=${driftX}`,
-        y: `+=${driftY}`,
-        rotation: `+=${(Math.random() - 0.5) * 20}`,
-        duration,
-        ease: "none",
-        repeat: -1,
-        yoyo: true,
-      });
+          if (!reduceMotion) {
+            const driftX = (40 + Math.random() * 60) * item.dirX;
+            const driftY = (30 + Math.random() * 50) * item.dirY;
+            const duration = 18 + Math.random() * 22;
 
-      tweens.push(tween);
-    }
+            tweens.push(
+              gsap.to(el, {
+                x: `+=${driftX}`,
+                y: `+=${driftY}`,
+                rotation: `+=${(Math.random() - 0.5) * 20}`,
+                duration,
+                ease: "none",
+                repeat: -1,
+                yoyo: true,
+              }),
+            );
+          }
+        }
 
-    tweensRef.current = tweens;
+        return () => {
+          for (const t of tweens) t.kill();
+        };
+      },
+    );
 
     return () => {
-      for (const t of tweens) t.kill();
+      mm.revert();
     };
   }, [floatingItems]);
-
-  const handleMouseEnter = (el: HTMLButtonElement) => {
-    gsap.to(el, {
-      scale: 1.15,
-      opacity: 1,
-      filter: "brightness(1.1)",
-      duration: 0.4,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
-  };
-
-  const handleMouseLeave = (el: HTMLButtonElement, item: FloatingObraItem) => {
-    gsap.to(el, {
-      scale: item.scale,
-      filter: "brightness(1)",
-      duration: 0.6,
-      ease: "power2.inOut",
-      overwrite: "auto",
-    });
-  };
 
   return (
     <div ref={containerRef} className="floating-obras-container">

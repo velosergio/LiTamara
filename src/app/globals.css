@@ -15,8 +15,9 @@
   --font-sans: var(--font-display);
 }
 
-html.has-red-cursor,
-html.has-red-cursor * {
+/* Hide the system cursor while the custom cursor layer is active */
+html:has(.red-cursor-active),
+html:has(.red-cursor-active) * {
   cursor: none;
 }
 
@@ -296,4 +297,21 @@ body {
 
 .obra-modal-description p {
   margin: 0;
+}
+
+/* Calm motion when the OS asks for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .floating-obra {
+    will-change: auto;
+    transition: none;
+  }
+
+  .obra-modal-close,
+  .obra-modal-nav button {
+    transition: none;
+  }
+
+  .nav-link span {
+    transition: none;
+  }
 }

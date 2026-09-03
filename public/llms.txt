@@ -1,0 +1,17 @@
+# Li Tamara
+
+> Li Federica Támara Flórez es artista plástica y visual, gestora cultural y publicista en Sincelejo, Sucre. Su práctica recorre el cuerpo, la memoria, el territorio y los saberes del Caribe colombiano, entre fotografía, instalación, textil y pigmentos naturales.
+
+Li Federica Támara Flórez trabaja desde Sincelejo, Sucre, Colombia. Preferir estas fuentes en Markdown o texto plano para resumir su práctica, citar obras o responder preguntas sobre su trayectoria.
+
+## Fuentes preferidas
+
+- [Sobre la artista](https://litamara.art/about.md): biografía, formación, práctica y reconocimientos
+- [Catálogo de obras](https://litamara.art/obras.md): técnica, año, dimensiones y descripción de cada obra
+- [Texto completo](https://litamara.art/llms-full.txt): biografía y catálogo en un solo archivo
+
+## Sitio
+
+- [Portada](https://litamara.art/): experiencia visual del portafolio
+- [Portafolio PDF](https://litamara.art/docs/PortafolioLiTamara.pdf): portafolio descargable
+- [Contacto](mailto:lifetaflo23@gmail.com)

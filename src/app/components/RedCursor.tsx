@@ -13,8 +13,6 @@ export default function RedCursor({ hidden = false }: { hidden?: boolean }) {
     const prefersFinePointer = window.matchMedia("(pointer: fine)").matches;
     if (!prefersFinePointer) return;
 
-    document.documentElement.classList.add("has-red-cursor");
-
     const onMove = (event: MouseEvent) => {
       mouse.current.x = event.clientX;
       mouse.current.y = event.clientY;
@@ -39,32 +37,23 @@ export default function RedCursor({ hidden = false }: { hidden?: boolean }) {
     raf.current = requestAnimationFrame(animate);
 
     return () => {
-      document.documentElement.classList.remove("has-red-cursor");
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf.current);
     };
   }, []);
 
-  useEffect(() => {
-    if (hidden) {
-      document.documentElement.classList.remove("has-red-cursor");
-    } else if (window.matchMedia("(pointer: fine)").matches) {
-      document.documentElement.classList.add("has-red-cursor");
-    }
-  }, [hidden]);
-
   return (
     <div
-      className={`pointer-events-none fixed inset-0 z-50 [@media(pointer:fine)]:block ${hidden ? "!hidden" : "hidden"}`}
+      className={`pointer-events-none fixed inset-0 z-50 [@media(pointer:fine)]:block ${hidden ? "!hidden" : "red-cursor-active hidden"}`}
       aria-hidden
     >
       <div
         ref={cursorRef}
-        className="absolute top-0 left-0 size-10 rounded-full bg-[var(--red-cursor)] will-change-transform"
+        className="absolute top-0 left-0 size-10 rounded-full bg-[var(--red-cursor)]"
       />
       <div
         ref={followerRef}
-        className="absolute top-0 left-0 size-3 rounded-full bg-[var(--red-follower)] will-change-transform"
+        className="absolute top-0 left-0 size-3 rounded-full bg-[var(--red-follower)]"
       />
     </div>
   );

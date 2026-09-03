@@ -6,8 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "llm-files": "npx --yes tsx scripts/write-llm-files.ts",
     "lint": "biome check --write",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "doctor": "npx react-doctor@latest"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
