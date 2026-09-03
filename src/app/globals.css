@@ -17,11 +17,216 @@
 
 html.has-red-cursor,
 html.has-red-cursor * {
-  cursor: none !important;
+  cursor: none;
 }
 
 body {
   background: var(--red-bg);
   color: var(--red-text);
   font-family: var(--font-display), Georgia, serif;
+}
+
+/* ── Reveal mask ── */
+
+.reveal-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Floating obras ── */
+
+.floating-obras-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.floating-obra {
+  position: absolute;
+  width: clamp(120px, 18vw, 260px);
+  opacity: 0;
+  cursor: pointer;
+  will-change: transform, opacity;
+  transition: box-shadow 0.4s ease;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  line-height: 0;
+}
+
+.floating-obra:hover {
+  z-index: 5;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+}
+
+.floating-obra img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(0.85) contrast(1.05);
+}
+
+/* ── Modal ── */
+
+.obra-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+}
+
+.obra-modal {
+  position: relative;
+  max-width: 960px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #1a0a0a;
+  border: 1px solid rgba(196, 30, 30, 0.25);
+  border-radius: 2px;
+}
+
+.obra-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ccc;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+
+.obra-modal-close:hover {
+  color: #fff;
+  background: rgba(196, 30, 30, 0.5);
+}
+
+.obra-modal-content {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-content {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.obra-modal-gallery {
+  position: relative;
+  background: #0d0505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.obra-modal-gallery img {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+}
+
+.obra-modal-nav {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.25rem 0.75rem;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  color: #aaa;
+}
+
+.obra-modal-nav button {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  transition: color 0.2s;
+}
+
+.obra-modal-nav button:hover {
+  color: #fff;
+}
+
+.obra-modal-info {
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.obra-modal-info h2 {
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #e8c4b8;
+  margin: 0;
+}
+
+.obra-modal-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #a08070;
+}
+
+.obra-modal-meta p {
+  margin: 0;
+}
+
+.obra-modal-meta span {
+  display: inline-block;
+  width: 7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  color: #806050;
+}
+
+.obra-modal-description {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #c0a090;
+}
+
+.obra-modal-description p {
+  margin: 0;
 }

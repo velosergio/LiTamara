@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const display = Bodoni_Moda({
+const display = Playfair_Display({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {

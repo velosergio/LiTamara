@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-export default function RedCursor() {
+export default function RedCursor({ hidden = false }: { hidden?: boolean }) {
   const cursorRef = useRef<HTMLDivElement>(null);
   const followerRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: -100, y: -100 });
@@ -45,8 +45,19 @@ export default function RedCursor() {
     };
   }, []);
 
+  useEffect(() => {
+    if (hidden) {
+      document.documentElement.classList.remove("has-red-cursor");
+    } else if (window.matchMedia("(pointer: fine)").matches) {
+      document.documentElement.classList.add("has-red-cursor");
+    }
+  }, [hidden]);
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 hidden [@media(pointer:fine)]:block" aria-hidden>
+    <div
+      className={`pointer-events-none fixed inset-0 z-50 [@media(pointer:fine)]:block ${hidden ? "!hidden" : "hidden"}`}
+      aria-hidden
+    >
       <div
         ref={cursorRef}
         className="absolute top-0 left-0 size-10 rounded-full bg-[var(--red-cursor)] will-change-transform"
