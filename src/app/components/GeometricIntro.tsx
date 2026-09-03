@@ -19,10 +19,10 @@ function introSettle() {
   const short = window.matchMedia("(max-height: 700px)").matches;
 
   if (narrow) {
-    // Larger mark, tucked just above the title — not lost in the upper third
+    // Larger mark, sitting just above the title
     return {
       scale: short ? 0.42 : 0.5,
-      y: short ? "-6vh" : "-8vh",
+      y: short ? "-12vh" : "-14vh",
     };
   }
 
