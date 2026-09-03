@@ -48,7 +48,7 @@ body {
 
 .floating-obra {
   position: absolute;
-  width: clamp(120px, 18vw, 260px);
+  width: clamp(88px, 26vw, 260px);
   opacity: 0;
   cursor: pointer;
   will-change: transform, opacity;
@@ -61,11 +61,27 @@ body {
   font: inherit;
   color: inherit;
   line-height: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.floating-obra:hover {
+@media (min-width: 640px) {
+  .floating-obra {
+    width: clamp(120px, 18vw, 260px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .floating-obra:hover {
+    z-index: 5;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.floating-obra:focus-visible {
   z-index: 5;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 4px;
 }
 
 .floating-obra img {
@@ -84,31 +100,47 @@ body {
   inset: 0;
   z-index: 100;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   background: rgba(0, 0, 0, 0.82);
   backdrop-filter: blur(8px);
-  padding: 1.5rem;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-overlay {
+    align-items: center;
+    padding: 1.5rem;
+  }
 }
 
 .obra-modal {
   position: relative;
   max-width: 960px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 92dvh;
   overflow-y: auto;
   background: #1a0a0a;
   border: 1px solid rgba(196, 30, 30, 0.25);
   border-radius: 2px;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 639px) {
+  .obra-modal {
+    max-height: 88dvh;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+  }
 }
 
 .obra-modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   z-index: 10;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,6 +153,16 @@ body {
   transition:
     color 0.2s,
     background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-close {
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 
 .obra-modal-close:hover {
@@ -145,15 +187,27 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 280px;
+  min-height: 220px;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-gallery {
+    min-height: 280px;
+  }
 }
 
 .obra-modal-gallery img {
   width: 100%;
   height: auto;
-  max-height: 70vh;
+  max-height: 48dvh;
   object-fit: contain;
   display: block;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-gallery img {
+    max-height: 70vh;
+  }
 }
 
 .obra-modal-nav {
@@ -186,10 +240,17 @@ body {
 }
 
 .obra-modal-info {
-  padding: 2rem 1.75rem;
+  padding: 1.35rem 1.25rem 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-info {
+    padding: 2rem 1.75rem;
+    gap: 1.25rem;
+  }
 }
 
 .obra-modal-info h2 {
@@ -214,11 +275,17 @@ body {
 
 .obra-modal-meta span {
   display: inline-block;
-  width: 7rem;
+  width: 5.5rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.7rem;
   color: #806050;
+}
+
+@media (min-width: 640px) {
+  .obra-modal-meta span {
+    width: 7rem;
+  }
 }
 
 .obra-modal-description {

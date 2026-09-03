@@ -183,17 +183,32 @@ export default function RevealMask() {
       (Math.min(canvas.width, canvas.height) * 0.18) /
       (canvas.width > canvas.height ? canvas.width : canvas.height);
 
-    const onMove = (e: MouseEvent) => {
+    const setPointer = (clientX: number, clientY: number) => {
       const dpr = Math.min(window.devicePixelRatio, 1.5);
-      mouse.current.x = e.clientX * dpr;
-      mouse.current.y = (window.innerHeight - e.clientY) * dpr;
-      targetRadius.current = aspectNorm();
+      mouse.current.x = clientX * dpr;
+      mouse.current.y = (window.innerHeight - clientY) * dpr;
+      // Slightly larger reveal hole on phones so a finger isn't too precise
+      const mobileBoost = window.matchMedia("(max-width: 640px)").matches
+        ? 1.35
+        : 1;
+      targetRadius.current = aspectNorm() * mobileBoost;
+    };
+
+    const onMove = (e: PointerEvent) => {
+      setPointer(e.clientX, e.clientY);
     };
     const onLeave = () => {
       targetRadius.current = 0;
     };
+    const onTouchEnd = () => {
+      // Keep the hole briefly so a tap still peeks; then close
+      targetRadius.current = 0;
+    };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onMove, { passive: true });
+    window.addEventListener("pointerup", onTouchEnd, { passive: true });
+    window.addEventListener("pointercancel", onTouchEnd, { passive: true });
     document.addEventListener("mouseleave", onLeave);
 
     const start = performance.now();
@@ -219,7 +234,10 @@ export default function RevealMask() {
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onMove);
+      window.removeEventListener("pointerup", onTouchEnd);
+      window.removeEventListener("pointercancel", onTouchEnd);
       document.removeEventListener("mouseleave", onLeave);
       window.removeEventListener("resize", resize);
     };

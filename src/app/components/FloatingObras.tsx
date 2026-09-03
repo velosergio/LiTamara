@@ -17,16 +17,28 @@ interface FloatingObraItem {
 }
 
 function buildFloatingItems(): FloatingObraItem[] {
+  const mobile =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 640px)").matches;
+
   const items: FloatingObraItem[] = [];
   for (const obra of obras) {
     const img = obra.images[0];
+    // Keep a clear band around the centered brand on phones
+    const x = mobile ? 8 + Math.random() * 84 : Math.random() * 100;
+    const y = mobile
+      ? Math.random() < 0.5
+        ? 4 + Math.random() * 22
+        : 68 + Math.random() * 26
+      : Math.random() * 100;
+
     items.push({
       obra,
       imgSrc: img,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
+      x,
+      y,
       rotation: Math.random() * 30 - 15,
-      scale: 0.6 + Math.random() * 0.5,
+      scale: mobile ? 0.55 + Math.random() * 0.35 : 0.6 + Math.random() * 0.5,
       speed: 0.15 + Math.random() * 0.25,
       dirX: Math.random() > 0.5 ? 1 : -1,
       dirY: Math.random() > 0.5 ? 1 : -1,

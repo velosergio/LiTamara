@@ -1,0 +1,139 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+env:
+  HOSTINGER_DOMAIN: litamara.art
+  HOSTINGER_API_BASE: https://developers.hostinger.com
+
+jobs:
+  deploy:
+    name: Build and deploy static site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static export
+        run: npm run build
+
+      - name: Package out/ as zip
+        id: package
+        run: |
+          STAMP=$(date -u +%Y%m%d_%H%M%S)
+          ARCHIVE="out_${STAMP}.zip"
+          (cd out && zip -r "../${ARCHIVE}" .)
+          echo "archive=${ARCHIVE}" >> "$GITHUB_OUTPUT"
+          echo "Packed ${ARCHIVE} ($(du -h "${ARCHIVE}" | cut -f1))"
+
+      - name: Upload archive and deploy via Hostinger API
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+          ARCHIVE: ${{ steps.package.outputs.archive }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${HOSTINGER_API_TOKEN:-}" ]; then
+            echo "Missing secret HOSTINGER_API_TOKEN"
+            exit 1
+          fi
+          if [ -z "${HOSTINGER_USERNAME:-}" ]; then
+            echo "Missing secret HOSTINGER_USERNAME"
+            exit 1
+          fi
+
+          AUTH_HEADER="Authorization: Bearer ${HOSTINGER_API_TOKEN}"
+
+          echo "Requesting upload URL..."
+          UPLOAD_JSON=$(curl -sS -X POST \
+            "${HOSTINGER_API_BASE}/api/hosting/v1/files/upload-urls" \
+            -H "${AUTH_HEADER}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "{\"username\":\"${HOSTINGER_USERNAME}\",\"domain\":\"${HOSTINGER_DOMAIN}\"}")
+
+          UPLOAD_URL=$(echo "$UPLOAD_JSON" | jq -r '.url // empty')
+          AUTH_KEY=$(echo "$UPLOAD_JSON" | jq -r '.auth_key // empty')
+          REST_AUTH_KEY=$(echo "$UPLOAD_JSON" | jq -r '.rest_auth_key // empty')
+
+          if [ -z "$UPLOAD_URL" ] || [ -z "$AUTH_KEY" ] || [ -z "$REST_AUTH_KEY" ]; then
+            echo "Failed to get upload credentials:"
+            echo "$UPLOAD_JSON"
+            exit 1
+          fi
+
+          SIZE=$(stat -c%s "$ARCHIVE")
+          DEST_URL="${UPLOAD_URL%/}/${ARCHIVE}?override=true"
+
+          echo "Creating TUS upload (${SIZE} bytes)..."
+          curl -sS -f -X POST "$DEST_URL" \
+            -H "X-Auth: ${AUTH_KEY}" \
+            -H "X-Auth-Rest: ${REST_AUTH_KEY}" \
+            -H "Tus-Resumable: 1.0.0" \
+            -H "Upload-Length: ${SIZE}" \
+            -H "Upload-Offset: 0" \
+            -o /dev/null
+
+          echo "Uploading archive..."
+          curl -sS -f -X PATCH "$DEST_URL" \
+            -H "X-Auth: ${AUTH_KEY}" \
+            -H "X-Auth-Rest: ${REST_AUTH_KEY}" \
+            -H "Tus-Resumable: 1.0.0" \
+            -H "Content-Type: application/offset+octet-stream" \
+            -H "Upload-Offset: 0" \
+            --data-binary "@${ARCHIVE}" \
+            -o /dev/null
+
+          echo "Triggering deploy..."
+          # archive_path is relative to the website document root (public_html)
+          HTTP_CODE=$(curl -sS -o /tmp/deploy.json -w "%{http_code}" -X POST \
+            "${HOSTINGER_API_BASE}/api/hosting/v1/accounts/${HOSTINGER_USERNAME}/websites/${HOSTINGER_DOMAIN}/deploy" \
+            -H "${AUTH_HEADER}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "{\"archive_path\":\"${ARCHIVE}\"}")
+
+          cat /tmp/deploy.json
+          echo
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "Deploy failed with HTTP ${HTTP_CODE}"
+            exit 1
+          fi
+          echo "Deploy accepted (HTTP ${HTTP_CODE})"
+
+      - name: Clear website cache
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+        run: |
+          set -euo pipefail
+          curl -sS -X DELETE \
+            "${HOSTINGER_API_BASE}/api/hosting/v1/accounts/${HOSTINGER_USERNAME}/websites/${HOSTINGER_DOMAIN}/cache/clear" \
+            -H "Authorization: Bearer ${HOSTINGER_API_TOKEN}" \
+            -H "Accept: application/json" \
+            -o /dev/null || true
+          echo "Cache clear requested"
+
+      - name: Smoke check
+        run: |
+          sleep 5
+          CODE=$(curl -sS -o /tmp/litamara.html -w "%{http_code}" "https://${HOSTINGER_DOMAIN}/")
+          echo "HTTP ${CODE}"
+          grep -qi "Li Tamara" /tmp/litamara.html
+          echo "Site looks live"

@@ -48,7 +48,7 @@ export default function Home() {
 
       <h1
         ref={headingRef}
-        className="pointer-events-none relative z-30 select-none px-6 text-center font-semibold tracking-[0.14em] text-[clamp(2rem,8vw,5.5rem)] text-[var(--red-text)] mix-blend-multiply"
+        className="pointer-events-none relative z-30 select-none px-5 text-center font-semibold tracking-[0.1em] text-[clamp(2.35rem,11vw,5.5rem)] text-[var(--red-text)] mix-blend-multiply sm:px-6 sm:tracking-[0.14em]"
         style={{ perspective: "600px", opacity: 0 }}
       >
         {[..."Li Tamara"].map((ch, i) => {
@@ -65,21 +65,27 @@ export default function Home() {
         })}
       </h1>
 
-      <nav ref={navRef} className="relative z-30 mt-1 flex items-center gap-6" style={{ opacity: 0 }}>
+      <nav
+        ref={navRef}
+        className="relative z-30 mt-3 flex items-center gap-5 sm:mt-1 sm:gap-6"
+        style={{ opacity: 0 }}
+      >
         <a
           href="/docs/PortafolioLiTamara.pdf"
           download
-          className="nav-link group relative px-1 py-1 text-sm tracking-[0.2em] uppercase text-black transition-colors hover:text-white"
+          className="nav-link group relative px-1 py-2 text-[0.8rem] tracking-[0.18em] uppercase text-black transition-colors hover:text-white sm:py-1 sm:text-sm sm:tracking-[0.2em]"
         >
           Portafolio
           <span className="absolute bottom-0 left-0 h-px w-0 bg-white transition-all duration-500 group-hover:w-full" />
         </a>
 
-        <span className="text-black/30 select-none">·</span>
+        <span className="text-black/30 select-none" aria-hidden>
+          ·
+        </span>
 
         <a
           href="mailto:lifetaflo23@gmail.com"
-          className="nav-link group relative px-1 py-1 text-sm tracking-[0.2em] uppercase text-black transition-colors hover:text-white"
+          className="nav-link group relative px-1 py-2 text-[0.8rem] tracking-[0.18em] uppercase text-black transition-colors hover:text-white sm:py-1 sm:text-sm sm:tracking-[0.2em]"
         >
           Contacto
           <span className="absolute bottom-0 left-0 h-px w-0 bg-white transition-all duration-500 group-hover:w-full" />

@@ -234,7 +234,8 @@ export const obras: Obra[] = [
   {
     slug: "materia-cromatica",
     title: "Materia Cromática",
-    technique: "Pigmentos naturales (bija, achiote, tanino de manglar, tierra roja)",
+    technique:
+      "Pigmentos naturales (bija, achiote, tanino de manglar, tierra roja)",
     dimensions: "Variable",
     year: "2024",
     description:
