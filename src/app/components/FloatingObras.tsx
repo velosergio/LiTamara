@@ -1,11 +1,14 @@
 "use client";
 
 import gsap from "gsap";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { type Obra, obras } from "../data/obras";
+import { fondoDecorativo, type Obra, obras, thumbOf } from "../data/obras";
 
 interface FloatingObraItem {
-  obra: Obra;
+  key: string;
+  /** null = imagen decorativa del fondo, sin ficha ni modal */
+  obra: Obra | null;
   imgSrc: string;
   x: number;
   y: number;
@@ -21,9 +24,13 @@ function buildFloatingItems(): FloatingObraItem[] {
     typeof window !== "undefined" &&
     window.matchMedia("(max-width: 640px)").matches;
 
+  const sources = [
+    ...obras.map((obra) => ({ key: obra.slug, obra, src: obra.images[0] })),
+    ...fondoDecorativo.map((src) => ({ key: src, obra: null, src })),
+  ];
+
   const items: FloatingObraItem[] = [];
-  for (const obra of obras) {
-    const img = obra.images[0];
+  for (const { key, obra, src } of sources) {
     // Keep a clear band around the centered brand on phones
     const x = mobile ? 8 + Math.random() * 84 : Math.random() * 100;
     const y = mobile
@@ -33,8 +40,9 @@ function buildFloatingItems(): FloatingObraItem[] {
       : Math.random() * 100;
 
     items.push({
+      key,
       obra,
-      imgSrc: img,
+      imgSrc: thumbOf(src),
       x,
       y,
       rotation: Math.random() * 30 - 15,
@@ -51,7 +59,7 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function handleMouseEnter(el: HTMLButtonElement) {
+function handleMouseEnter(el: HTMLElement) {
   gsap.to(el, {
     scale: 1.15,
     opacity: 1,
@@ -62,7 +70,7 @@ function handleMouseEnter(el: HTMLButtonElement) {
   });
 }
 
-function handleMouseLeave(el: HTMLButtonElement, item: FloatingObraItem) {
+function handleMouseLeave(el: HTMLElement, item: FloatingObraItem) {
   gsap.to(el, {
     scale: item.scale,
     filter: "brightness(1)",
@@ -78,10 +86,10 @@ interface Props {
 
 export default function FloatingObras({ onSelect }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const itemsRef = useRef<HTMLButtonElement[]>([]);
+  const itemsRef = useRef<HTMLElement[]>([]);
   const [floatingItems] = useState(buildFloatingItems);
 
-  const setItemRef = useCallback((el: HTMLButtonElement | null, i: number) => {
+  const setItemRef = useCallback((el: HTMLElement | null, i: number) => {
     if (el) itemsRef.current[i] = el;
   }, []);
 
@@ -154,30 +162,53 @@ export default function FloatingObras({ onSelect }: Props) {
 
   return (
     <div ref={containerRef} className="floating-obras-container">
-      {floatingItems.map((item, i) => (
-        <button
-          type="button"
-          key={item.obra.slug}
-          ref={(el) => setItemRef(el, i)}
-          className="floating-obra"
-          onMouseEnter={() => {
-            const el = itemsRef.current[i];
-            if (el) handleMouseEnter(el);
-          }}
-          onMouseLeave={() => {
-            const el = itemsRef.current[i];
-            if (el) handleMouseLeave(el, item);
-          }}
-          onClick={() => onSelect(item.obra)}
-        >
-          <img
+      {floatingItems.map((item, i) => {
+        const { obra } = item;
+        const image = (
+          <Image
             src={item.imgSrc}
-            alt={item.obra.title}
+            alt={obra ? obra.title : ""}
+            width={260}
+            height={320}
+            sizes="(max-width: 640px) 26vw, 18vw"
             draggable={false}
-            loading="lazy"
+            style={{ width: "100%", height: "auto" }}
           />
-        </button>
-      ))}
+        );
+
+        if (!obra) {
+          return (
+            <div
+              key={item.key}
+              ref={(el) => setItemRef(el, i)}
+              className="floating-obra floating-obra--decor"
+              aria-hidden
+            >
+              {image}
+            </div>
+          );
+        }
+
+        return (
+          <button
+            type="button"
+            key={item.key}
+            ref={(el) => setItemRef(el, i)}
+            className="floating-obra"
+            onMouseEnter={() => {
+              const el = itemsRef.current[i];
+              if (el) handleMouseEnter(el);
+            }}
+            onMouseLeave={() => {
+              const el = itemsRef.current[i];
+              if (el) handleMouseLeave(el, item);
+            }}
+            onClick={() => onSelect(obra)}
+          >
+            {image}
+          </button>
+        );
+      })}
     </div>
   );
 }

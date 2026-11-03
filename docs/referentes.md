@@ -76,14 +76,14 @@
 
 ## Resumen comparativo
 
-| Referente | Estilo dominante | Interactividad | Stack probable |
-|-----------|-----------------|----------------|----------------|
-| gen-m.jp | Minimalismo japonés | Scroll suave | HTML/CSS/JS vanilla |
-| Olafur Eliasson | Mapa conceptual | Navegación por grafos | Canvas/SVG, D3.js |
-| Tomás Saraceno | Editorial/galería | Estándar (grid) | WordPress/CMS |
-| Universal Everything | Futurista-orgánico | Video hover | Next.js + CMS headless |
-| Refik Anadol | Archivo denso | Filtrado/catálogo | WordPress custom |
-| Mathis Biabiany | Inmersivo/3D | WebGL interactivo | Three.js, WebGL, custom |
+| Referente            | Estilo dominante    | Interactividad        | Stack probable          |
+| -------------------- | ------------------- | --------------------- | ----------------------- |
+| gen-m.jp             | Minimalismo japonés | Scroll suave          | HTML/CSS/JS vanilla     |
+| Olafur Eliasson      | Mapa conceptual     | Navegación por grafos | Canvas/SVG, D3.js       |
+| Tomás Saraceno       | Editorial/galería   | Estándar (grid)       | WordPress/CMS           |
+| Universal Everything | Futurista-orgánico  | Video hover           | Next.js + CMS headless  |
+| Refik Anadol         | Archivo denso       | Filtrado/catálogo     | WordPress custom        |
+| Mathis Biabiany      | Inmersivo/3D        | WebGL interactivo     | Three.js, WebGL, custom |
 
 ---
 
@@ -99,11 +99,11 @@ La textura es central. Las obras no son superficies lisas: son telas manchadas p
 
 ### Composición y formato
 
-Las composiciones tienden a ser **centrales y contemplativas**: el útero en el centro de *Mater*, la vulva enmarcada como reliquia, la mancha del tanino expandiéndose desde un punto. En las series (*Ritmos Cotidianos*, *Hasta Hacerlo Otro*) la repetición serializada construye ritmo visual — 30 trapitos, 5 cuadros como 5 días del ciclo. Los formatos van desde lo íntimo (20x15 cm) hasta lo monumental (2,00 x 1,30 m en *Pliegues*), y la instalación espacial (*Instrucciones para Sostener lo Roto*, *Olor a Monte*).
+Las composiciones tienden a ser **centrales y contemplativas**: el útero en el centro de _Mater_, la vulva enmarcada como reliquia, la mancha del tanino expandiéndose desde un punto. En las series (_Ritmos Cotidianos_, _Hasta Hacerlo Otro_) la repetición serializada construye ritmo visual — 30 trapitos, 5 cuadros como 5 días del ciclo. Los formatos van desde lo íntimo (20x15 cm) hasta lo monumental (2,00 x 1,30 m en _Pliegues_), y la instalación espacial (_Instrucciones para Sostener lo Roto_, _Olor a Monte_).
 
 ### Fotografía
 
-Las series fotográficas (*Fragmentada*, *Montes de María*, *Pliegues*, *Rojo Residual*) se imprimen sobre **tela**, no sobre papel. Esto desdibuja el límite entre fotografía y textil, entre imagen y objeto. Los cuerpos fotografiados son cuerpos reales — pliegues de piel, marcas, cicatrices — capturados con cercanía, sin idealización. La impresión textil suaviza la imagen, la vuelve táctil y vulnerable.
+Las series fotográficas (_Fragmentada_, _Montes de María_, _Pliegues_, _Rojo Residual_) se imprimen sobre **tela**, no sobre papel. Esto desdibuja el límite entre fotografía y textil, entre imagen y objeto. Los cuerpos fotografiados son cuerpos reales — pliegues de piel, marcas, cicatrices — capturados con cercanía, sin idealización. La impresión textil suaviza la imagen, la vuelve táctil y vulnerable.
 
 ### Iconografía
 
@@ -111,13 +111,13 @@ La obra dialoga con la **iconografía religiosa católica** (sudarios, reliquias
 
 ### Ejes temáticos desde lo visual
 
-| Eje | Obras representativas | Recurso visual |
-|-----|----------------------|----------------|
-| Cuerpo / dolor menstrual | *Dolor en Sí*, *Rojo Residual*, *Ritmos Cotidianos*, *Hasta Hacerlo Otro*, *Fuera de Sí* | Manchas rojas, repetición serial, pigmentos de bija sobre tela |
-| Memoria / herencia femenina | *Fragmentada*, *Sudario Femme*, *Ritmos Cotidianos* | Fotografía sobre tela, trapitos textiles, impresión de maquillaje |
-| Territorio / paisaje | *Montes de María*, *Tanino*, *Tanino II*, *Crepuscular*, *Olor a Monte* | Pigmentos naturales locales, capilaridad, instalación sensorial |
-| Lo sagrado femenino | *Cuerpo Votivo*, *Mater*, *Sacré* | Bordado de útero, iconografía votiva, pigmentos rituales |
-| Fragilidad / resistencia | *Cerco para una Llama*, *Instrucciones para Sostener lo Roto* | Alambre de púas + vela, bahareque en ruinas sostenido por horcones |
+| Eje                         | Obras representativas                                                                    | Recurso visual                                                     |
+| --------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Cuerpo / dolor menstrual    | _Dolor en Sí_, _Rojo Residual_, _Ritmos Cotidianos_, _Hasta Hacerlo Otro_, _Fuera de Sí_ | Manchas rojas, repetición serial, pigmentos de bija sobre tela     |
+| Memoria / herencia femenina | _Fragmentada_, _Sudario Femme_, _Ritmos Cotidianos_                                      | Fotografía sobre tela, trapitos textiles, impresión de maquillaje  |
+| Territorio / paisaje        | _Montes de María_, _Tanino_, _Tanino II_, _Crepuscular_, _Olor a Monte_                  | Pigmentos naturales locales, capilaridad, instalación sensorial    |
+| Lo sagrado femenino         | _Cuerpo Votivo_, _Mater_, _Sacré_                                                        | Bordado de útero, iconografía votiva, pigmentos rituales           |
+| Fragilidad / resistencia    | _Cerco para una Llama_, _Instrucciones para Sostener lo Roto_                            | Alambre de púas + vela, bahareque en ruinas sostenido por horcones |
 
 ### Síntesis estética
 

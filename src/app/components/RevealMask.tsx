@@ -181,7 +181,7 @@ export default function RevealMask() {
     const RAD_LERP = 0.06;
     const aspectNorm = () =>
       (Math.min(canvas.width, canvas.height) * 0.18) /
-      (canvas.width > canvas.height ? canvas.width : canvas.height);
+      Math.max(canvas.width, canvas.height);
 
     const setPointer = (clientX: number, clientY: number) => {
       const dpr = Math.min(window.devicePixelRatio, 1.5);

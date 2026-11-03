@@ -16,7 +16,7 @@ export const site = {
   region: "Sucre",
   country: "CO",
   countryName: "Colombia",
-  ogImage: "/obras/li-tamara-retrato.png",
+  ogImage: "/obras/og/li-tamara-retrato.jpg",
   icon: "/isotipo.svg",
   portfolioPdf: "/docs/PortafolioLiTamara.pdf",
   keywords: [

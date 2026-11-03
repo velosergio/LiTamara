@@ -7,6 +7,7 @@ import {
   MotionConfig,
 } from "motion/react";
 import * as m from "motion/react-m";
+import Image from "next/image";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type { Obra } from "../data/obras";
 
@@ -51,16 +52,31 @@ function ObraModalContent({
       <div className="obra-modal-content">
         <div className="obra-modal-gallery">
           <AnimatePresence mode="wait">
-            <m.img
+            <m.div
               key={obra.images[activeImg]}
-              src={obra.images[activeImg]}
-              alt={obra.title}
-              draggable={false}
               initial={{ opacity: 0, scale: 1.04 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.4 }}
-            />
+              style={{ width: "100%", lineHeight: 0 }}
+            >
+              <Image
+                src={obra.images[activeImg]}
+                alt={obra.title}
+                width={960}
+                height={1200}
+                sizes="(max-width: 639px) 100vw, 480px"
+                draggable={false}
+                priority
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "70vh",
+                  objectFit: "contain",
+                  display: "block",
+                }}
+              />
+            </m.div>
           </AnimatePresence>
 
           {obra.images.length > 1 && (

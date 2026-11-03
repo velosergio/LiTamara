@@ -9,22 +9,24 @@
     "llm-files": "npx --yes tsx scripts/write-llm-files.ts",
     "lint": "biome check --write",
     "format": "biome format --write",
-    "doctor": "npx react-doctor@latest"
+    "doctor": "npx react-doctor@latest",
+    "images": "npx --yes tsx scripts/optimize-images.mts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "gsap": "^3.15.0",
-    "motion": "^13.2.0",
-    "next": "16.3.4",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "motion": "^14.9.0",
+    "next": "16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.12",
+    "@biomejs/biome": "2.6.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^7"
   }

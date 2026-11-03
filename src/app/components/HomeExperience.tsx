@@ -69,7 +69,7 @@ export default function HomeExperience() {
       <h1
         ref={headingRef}
         aria-label="Li Tamara"
-        className="pointer-events-none relative z-30 select-none px-5 text-center font-semibold tracking-[0.1em] text-[clamp(2.35rem,11vw,5.5rem)] text-[var(--red-text)] mix-blend-multiply sm:px-6 sm:tracking-[0.14em]"
+        className="pointer-events-none relative z-30 translate-y-4 select-none px-5 text-center font-semibold tracking-[0.1em] text-[clamp(2.35rem,11vw,5.5rem)] text-[var(--red-text)] mix-blend-multiply sm:translate-y-5 sm:px-6 sm:tracking-[0.14em]"
         style={{ perspective: "600px", opacity: 0 }}
       >
         {[..."Li Tamara"].map((ch, i) => {

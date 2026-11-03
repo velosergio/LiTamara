@@ -85,6 +85,12 @@ body {
   outline-offset: 4px;
 }
 
+/* Imágenes de fondo sin ficha: no se pueden pulsar */
+.floating-obra--decor {
+  pointer-events: none;
+  cursor: default;
+}
+
 .floating-obra img {
   width: 100%;
   height: auto;
