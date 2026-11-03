@@ -15,8 +15,6 @@ interface FloatingObraItem {
   rotation: number;
   scale: number;
   speed: number;
-  dirX: number;
-  dirY: number;
 }
 
 function buildFloatingItems(): FloatingObraItem[] {
@@ -48,8 +46,6 @@ function buildFloatingItems(): FloatingObraItem[] {
       rotation: Math.random() * 30 - 15,
       scale: mobile ? 0.55 + Math.random() * 0.35 : 0.6 + Math.random() * 0.5,
       speed: 0.15 + Math.random() * 0.25,
-      dirX: Math.random() > 0.5 ? 1 : -1,
-      dirY: Math.random() > 0.5 ? 1 : -1,
     });
   }
   return items;
@@ -106,7 +102,45 @@ export default function FloatingObras({ onSelect }: Props) {
       },
       (context) => {
         const reduceMotion = Boolean(context.conditions?.reduceMotion);
-        const tweens: gsap.core.Tween[] = [];
+        const mobile = window.matchMedia("(max-width: 640px)").matches;
+        let alive = true;
+
+        /**
+         * Paseo aleatorio: cada obra va a un punto al azar alrededor de su
+         * posición base y, al llegar, elige el siguiente con otra duración,
+         * otra curva y otro giro. Así ningún recorrido se repite.
+         * (La escala la maneja el hover, por eso aquí no se anima.)
+         */
+        const wander = (
+          el: HTMLElement,
+          item: FloatingObraItem,
+          first = false,
+        ) => {
+          if (!alive) return;
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          // En móvil, poco recorrido vertical para no invadir la marca central
+          const rangeX = vw * (mobile ? 0.1 : 0.16);
+          const rangeY = vh * (mobile ? 0.05 : 0.16);
+
+          gsap.to(el, {
+            x: gsap.utils.random(-rangeX, rangeX),
+            y: gsap.utils.random(-rangeY, rangeY),
+            rotation: item.rotation + gsap.utils.random(-22, 22),
+            // speed (0.15–0.4) hace unas obras más lentas que otras: tramos de ~3 a 18 s
+            duration: gsap.utils.random(4, 9) * (0.3 / item.speed),
+            delay: first
+              ? gsap.utils.random(0.5, 2.5)
+              : gsap.utils.random(0, 1.2),
+            ease: gsap.utils.random([
+              "sine.inOut",
+              "power1.inOut",
+              "power2.inOut",
+              "circ.inOut",
+            ]),
+            onComplete: () => wander(el, item),
+          });
+        };
 
         for (let i = 0; i < els.length; i++) {
           const el = els[i];
@@ -130,27 +164,13 @@ export default function FloatingObras({ onSelect }: Props) {
             ease: "power2.out",
           });
 
-          if (!reduceMotion) {
-            const driftX = (40 + Math.random() * 60) * item.dirX;
-            const driftY = (30 + Math.random() * 50) * item.dirY;
-            const duration = 18 + Math.random() * 22;
-
-            tweens.push(
-              gsap.to(el, {
-                x: `+=${driftX}`,
-                y: `+=${driftY}`,
-                rotation: `+=${(Math.random() - 0.5) * 20}`,
-                duration,
-                ease: "none",
-                repeat: -1,
-                yoyo: true,
-              }),
-            );
-          }
+          if (!reduceMotion) wander(el, item, true);
         }
 
         return () => {
-          for (const t of tweens) t.kill();
+          alive = false;
+          // Los tweens encadenados en onComplete no quedan en el contexto
+          gsap.killTweensOf(els, "x,y,rotation");
         };
       },
     );
